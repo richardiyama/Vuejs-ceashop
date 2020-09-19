@@ -27,7 +27,7 @@ product.rating =  req.body.rating;
 
 await product.save();
 res.json({
-    status: true,
+    success: true,
     message: "Successfully saved"
 });
 
@@ -47,19 +47,93 @@ res.json({
 
 //GET request - get all products
 
+router.get("/products", async(req,res) =>{
 
+    try {
+        let products = await Product.find();
+
+        res.json({
+            success: true,
+            products: products
+        })
+    } catch (err) {
+        res.status(500).json({
+            success:false,
+            message:err.message
+        })
+        
+    }
+   
+
+})
 
 
 
 //GET request - get a single product
 
 
+router.get("/products/:id", async(req,res) =>{
+
+    try {
+        let product = await Product.findOne({_id: req.params.id});
+
+        res.json({
+            success: true,
+            product: product
+        })
+    } catch (err) {
+        res.status(500).json({
+            success:false,
+            message:err.message
+        })
+        
+    }
+   
+
+})
 
 
 
 
 //PUT request - Update a single product
 
+router.get("/products/:id",upload.single("photo"), async(req,res) =>{
+
+    try {
+        let product = await Product.findOneAndUpdate({_id: req.params.id},
+            {
+             $set:{
+                title: req.body.title,
+                description: req.body.description,
+                price: req.body.price,
+                stockQuantity: req.body.stockQuantity,
+                photo: req.file.location,
+                category: req.body.categoryID,
+                owner: req.body.ownerID 
+                
+             }
+            
+        
+        
+            },
+            {upsert:true}
+            
+            );
+
+        res.json({
+            success: true,
+            updatedproduct: product
+        })
+    } catch (err) {
+        res.status(500).json({
+            success:false,
+            message:err.message
+        })
+        
+    }
+   
+
+})
 
 
 
