@@ -97,7 +97,7 @@ router.get("/products/:id", async(req,res) =>{
 
 //PUT request - Update a single product
 
-router.get("/products/:id",upload.single("photo"), async(req,res) =>{
+router.put("/products/:id",upload.single("photo"), async(req,res) =>{
 
     try {
         let product = await Product.findOneAndUpdate({_id: req.params.id},
@@ -143,5 +143,24 @@ router.get("/products/:id",upload.single("photo"), async(req,res) =>{
 
 //DELETE request - delete a single product
 
+router.delete("/products/:id", async(req,res) =>{
 
+    try {
+        let deletedProduct = await Product.findOneAndDelete({_id: req.params.id});
+       if(deletedProduct){
+        res.json({
+            status: true,
+            message: "Successfully deleted "
+        })
+    }
+    } catch (err) {
+        res.status(500).json({
+            success:false,
+            message:err.message
+        })
+        
+    }
+   
+
+})
 module.exports = router;
