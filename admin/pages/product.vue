@@ -84,6 +84,24 @@
 
 <script>
 export default {
-    
+    async asyncData({$axios}){
+        try {
+             let categories = $axios.$get("http://localhost:3000/api/categories");
+        let owners = $axios.$get("http://localhost:3000/api/owners");
+
+        const [categoryResponse,ownerResponse] = await Promise.all([
+            categories,
+            owners
+        ]);
+   console.log(categoryResponse);
+        return{
+           categories: categoryResponse.categories,
+            owners: ownerResponse.owners
+        }
+        } catch (err) {
+            console.log(err);
+        }
+       
+    }
 }
 </script>
